@@ -1,13 +1,27 @@
 # Brian2 Tutorial at OCNC2025
 ## Setup
 
-Clone the repository with ```git clone https://github.com/danielmk/OCNC2025_brian2```
+Clone the repository with 
 
-Go into the repository directory with ```cd OCNC2025_brian2```
+```
+git clone https://github.com/danielmk/OCNC2025_brian2
+```
 
-Create a virtual environment with ```conda env create --file environment.yml```
+Go into the repository directory with
 
-Activate the environment with ```conda activate ocncbrian2```
+```
+cd OCNC2025_brian2
+```
+
+Create a virtual environment with 
+```
+conda env create --file environment.yml
+```
+
+Activate the environment with
+```
+conda activate ocncbrian2
+```
 
 You are good to go
 
