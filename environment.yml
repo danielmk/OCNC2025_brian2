@@ -1,10 +1,13 @@
-name: template
+name: ocncbrian2
 channels:
   - conda-forge
   - defaults
 dependencies:
-  - python>=3.13
-  - sbi=0.24.0
+  - python==3.10
+  - brian2
+  - numpy
+  - matplotlib
+  - spyder
   - pip
   - pip:
     - -e .
