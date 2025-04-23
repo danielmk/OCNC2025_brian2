@@ -21,6 +21,7 @@ neuron = b2.NeuronGroup(N=n_neurons,  # How many neurons are in the neuron group
                         model=lif_model_string,  # The string that describes the model
                         reset=lif_reset_string,  # The string that describes what happens at reset
                         threshold='v>VT',  # When to reset
+                        dt=0.1 *b2.ms,
                         method='euler')  # ODE solving method
 
 # Now the neuron exists but by default its parameters are set at 0
@@ -58,7 +59,7 @@ spike_trains = S.spike_trains()
 n_spikes = [len(spike_trains[k]) for k in spike_trains]
 
 plt.figure()
-plt.plot(M.t, M.v[-1])
+plt.plot(M.t, M.v[0])
 
 plt.figure()
 plt.scatter(S.t, S.i, marker='|')

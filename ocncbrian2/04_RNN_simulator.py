@@ -2,8 +2,7 @@ import brian2 as b2
 import numpy as np
 import matplotlib.pyplot as plt
 
-from ocncbrian2.synapse_solution import adex_model_string, adex_reset_string
-from ocncbrian2.synapse_solution import excitatory_synapse_model_string, inhibitory_synapse_model_string
+from ocncbrian2.solution_synapse import adex_model_string, adex_reset_string, excitatory_synapse_model_string, inhibitory_synapse_model_string
 
 from dataclasses import dataclass
 
@@ -47,11 +46,7 @@ class RNNSimulator():
         self.N_inh = N_inh
         self.intrinsic_constants = intrinsic_constants
         self.synaptic_constants = synaptic_constants
-        self.make_network()
-        # self.device = b2.devices.get_device()
-        # if self.device == b2.devices.cpp_standalone.device.CPPStandaloneDevice:
-        #     self.build_device()
-        
+        self.make_network()        
     
     def make_network(self):    
         exc_neurons = b2.NeuronGroup(self.N_exc,

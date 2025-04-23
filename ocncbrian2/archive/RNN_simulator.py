@@ -81,16 +81,6 @@ class RNNSimulator():
         inh_synapses.connect(p=1.0)
             
         b2.device.apply_run_args()
-        """
-        exc_synapses.weight = np.random.lognormal(mean=b2.asarray(neurons.exc_mean),
-                                               sigma=b2.asarray(neurons.exc_sigma),
-                                               size=self.N*self.N) * b2.nS
-
-        inh_synapses.weight = np.random.lognormal(mean=b2.asarray(neurons.inh_mean),
-                                               sigma=b2.asarray(neurons.inh_sigma),
-                                               size=self.N*self.N) * b2.nS
-        """
-        pdb.set_trace()
         
         neurons.v = np.random.normal(-45 * b2.mV, 10 * b2.mV) * b2. mV
         

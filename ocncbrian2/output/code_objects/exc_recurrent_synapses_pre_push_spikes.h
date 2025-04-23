@@ -1,0 +1,7 @@
+#ifndef _INCLUDED_exc_recurrent_synapses_pre_push_spikes
+#define _INCLUDED_exc_recurrent_synapses_pre_push_spikes
+
+void _run_exc_recurrent_synapses_pre_push_spikes();
+
+
+#endif

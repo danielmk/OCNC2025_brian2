@@ -1,0 +1,7 @@
+#ifndef _INCLUDED_inh_neurons_group_variable_set_conditional_codeobject_1
+#define _INCLUDED_inh_neurons_group_variable_set_conditional_codeobject_1
+
+void _run_inh_neurons_group_variable_set_conditional_codeobject_1();
+
+
+#endif
