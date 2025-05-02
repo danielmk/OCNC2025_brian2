@@ -1,7 +1,0 @@
-#ifndef _INCLUDED_inh_neurons_spike_thresholder_codeobject
-#define _INCLUDED_inh_neurons_spike_thresholder_codeobject
-
-void _run_inh_neurons_spike_thresholder_codeobject();
-
-
-#endif

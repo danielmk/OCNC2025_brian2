@@ -1,7 +1,0 @@
-#ifndef _INCLUDED_inh_synapses_summed_variable_gi_post_codeobject
-#define _INCLUDED_inh_synapses_summed_variable_gi_post_codeobject
-
-void _run_inh_synapses_summed_variable_gi_post_codeobject();
-
-
-#endif

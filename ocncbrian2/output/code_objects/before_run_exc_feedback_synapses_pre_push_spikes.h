@@ -1,6 +1,0 @@
-#ifndef _INCLUDED_exc_feedback_synapses_pre_push_spikes_before
-#define _INCLUDED_exc_feedback_synapses_pre_push_spikes_before
-
-void _before_run_exc_feedback_synapses_pre_push_spikes();
-
-#endif

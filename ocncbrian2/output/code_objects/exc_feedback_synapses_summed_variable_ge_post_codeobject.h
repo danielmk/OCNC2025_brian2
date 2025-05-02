@@ -1,7 +1,0 @@
-#ifndef _INCLUDED_exc_feedback_synapses_summed_variable_ge_post_codeobject
-#define _INCLUDED_exc_feedback_synapses_summed_variable_ge_post_codeobject
-
-void _run_exc_feedback_synapses_summed_variable_ge_post_codeobject();
-
-
-#endif

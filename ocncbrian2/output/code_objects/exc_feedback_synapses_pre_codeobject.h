@@ -1,8 +1,0 @@
-#ifndef _INCLUDED_exc_feedback_synapses_pre_codeobject
-#define _INCLUDED_exc_feedback_synapses_pre_codeobject
-
-void _run_exc_feedback_synapses_pre_codeobject();
-
-void _debugmsg_exc_feedback_synapses_pre_codeobject();
-
-#endif

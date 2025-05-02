@@ -1,7 +1,0 @@
-#ifndef _INCLUDED_exc_feedback_synapses_synapses_create_generator_codeobject
-#define _INCLUDED_exc_feedback_synapses_synapses_create_generator_codeobject
-
-void _run_exc_feedback_synapses_synapses_create_generator_codeobject();
-
-
-#endif
