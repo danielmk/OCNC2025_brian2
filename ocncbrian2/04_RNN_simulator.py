@@ -2,7 +2,7 @@ import brian2 as b2
 import numpy as np
 import matplotlib.pyplot as plt
 
-from ocncbrian2.solution_synapse import adex_model_string, adex_reset_string, excitatory_synapse_model_string, inhibitory_synapse_model_string
+from ocncbrian2.solution_synapse import adex_model, adex_reset, exc_synapse_model, inh_synapse_model
 
 from dataclasses import dataclass
 
@@ -50,17 +50,17 @@ class RNNSimulator():
     
     def make_network(self):    
         exc_neurons = b2.NeuronGroup(self.N_exc,
-                                 model=adex_model_string,
+                                 model=adex_model,
                                  threshold='v>0.0*mV',
-                                 reset=adex_reset_string,
+                                 reset=adex_reset,
                                  method='euler',
                                  name='exc_neurons',
                                  dt=0.1*b2.ms)
         
         inh_neurons = b2.NeuronGroup(self.N_inh,
-                                 model=adex_model_string,
+                                 model=adex_model,
                                  threshold='v>0.0*mV',
-                                 reset=adex_reset_string,
+                                 reset=adex_reset,
                                  method='euler',
                                  name='inh_neurons',
                                  dt=0.1*b2.ms)
@@ -78,7 +78,7 @@ class RNNSimulator():
                
         exc_recurrent_synapses = b2.Synapses(exc_neurons,
                                    exc_neurons,
-                                   model=excitatory_synapse_model_string,
+                                   model=exc_synapse_model,
                                    on_pre='g += weight',
                                    name='exc_recurrent_synapses',
                                    method='euler',
@@ -91,7 +91,7 @@ class RNNSimulator():
         
         exc_feedback_synapses = b2.Synapses(exc_neurons,
                                    inh_neurons,
-                                   model=excitatory_synapse_model_string,
+                                   model=exc_synapse_model,
                                    on_pre='g += weight',
                                    name='exc_feedback_synapses',
                                    method='euler',
@@ -103,7 +103,7 @@ class RNNSimulator():
 
         inh_synapses = b2.Synapses(inh_neurons,
                                    exc_neurons,
-                                   model=inhibitory_synapse_model_string,
+                                   model=inh_synapse_model,
                                    on_pre='g += weight',
                                    name='inh_synapses',
                                    method='euler',

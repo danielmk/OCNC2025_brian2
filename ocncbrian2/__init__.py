@@ -1,1 +1,1 @@
-from .solution_synapse import adex_model_string, adex_reset_string, excitatory_synapse_model_string, inhibitory_synapse_model_string
+from .solution_synapse import adex_model, adex_reset, exc_synapse_model, inh_synapse_model

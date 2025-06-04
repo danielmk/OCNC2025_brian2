@@ -1,70 +1,132 @@
 import brian2 as b2
-from dataclasses import dataclass
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Start a clean simulation environment
 b2.start_scope()
 
-# This string describes the ordinary differential equationof the leaky integrate-and-fire neuron model
-lif_model_string = '''dv/dt = (-gL*(v-EL)+I(t,i))/C : volt
-            gL : siemens 
-            EL : volt
-            C : farad
-            VT : volt
-            Vr : volt'''
+# ----------------------------
+# 1. Define the neuron model
+# ----------------------------
 
-lif_reset_string = '''v=Vr'''
+# Leaky Integrate-and-Fire model (LIF)
+lif_model = '''
+dv/dt = (-gL*(v - EL) + I(t, i)) / C : volt
+gL : siemens       # Leak conductance
+EL : volt          # Resting potential
+C : farad          # Membrane capacitance
+VT : volt          # Spike threshold
+Vr : volt          # Reset potential
+'''
 
-n_neurons = 10
+# What happens when a neuron spikes
+reset_rule = 'v = Vr'
 
-neuron = b2.NeuronGroup(N=n_neurons,  # How many neurons are in the neuron group?
-                        model=lif_model_string,  # The string that describes the model
-                        reset=lif_reset_string,  # The string that describes what happens at reset
-                        threshold='v>VT',  # When to reset
-                        dt=0.1 *b2.ms,
-                        method='euler')  # ODE solving method
+# ----------------------------
+# 2. Create the neuron group
+# ----------------------------
 
-# Now the neuron exists but by default its parameters are set at 0
-# We need to define reasonable parameters
-neuron.v = -70 * b2.mV  # Initial voltage
-neuron.gL = 10 * b2.nS  # 10 nano siemens is 100 MOhm
+n_neurons = 10  # Number of neurons
+
+neuron = b2.NeuronGroup(
+    N=n_neurons,
+    model=lif_model,
+    reset=reset_rule,
+    threshold='v > VT',
+    dt=0.1 * b2.ms,
+    method='euler'
+)
+
+# ----------------------------
+# 3. Set neuron parameters
+# ----------------------------
+
+neuron.v = -70 * b2.mV   # Initial membrane potential
+neuron.gL = 10 * b2.nS   # Leak conductance
 neuron.EL = -70 * b2.mV  # Resting potential
-neuron.VT = -40 * b2.mV  # Threshold potential
-neuron.Vr = -75 * b2.mV  # Reset potential
-neuron.C = 30 * b2.pF  
+neuron.VT = -40 * b2.mV  # Spike threshold
+neuron.Vr = -75 * b2.mV  # Reset value after spike
+neuron.C = 30 * b2.pF    # Membrane capacitance
 
-# Simulation hyperparameters
-_dt = 0.1 * b2.ms
-b2.defaultclock.dt = _dt
-_duration = 2.0 * b2.second
+# ----------------------------
+# 4. Set simulation parameters
+# ----------------------------
 
-# Now we need to define a input stimulus
+dt = 0.1 * b2.ms
+duration = 2.0 * b2.second
+
+b2.defaultclock.dt = dt  # Set global time step
+
+# ----------------------------
+# 5. Create input stimulus
+# ----------------------------
+
+# Stimulus parameters
 stim_start = 0.5 * b2.second
 stim_stop = 1.5 * b2.second
+
+# Varying stimulus amplitude for each neuron
 stim_amp = np.linspace(300, 390, n_neurons) * b2.pA
-stim_array = np.zeros((int(_duration / _dt), n_neurons))
-stim_array[int(stim_start / _dt):int(stim_stop / _dt), :] = 1
 
-stim_array = stim_array * stim_amp
+# Create an array of zeros and set values during the stimulus time
+stim_array = np.zeros((int(duration / dt), n_neurons))
+stim_array[int(stim_start / dt):int(stim_stop / dt), :] = 1
+stim_array *= stim_amp  # Scale by amplitude
 
-I = b2.TimedArray(stim_array, dt=_dt)
+# Use TimedArray to turn the stimulus into a Brian2 input
+I = b2.TimedArray(stim_array, dt=dt)
 
-# Measure the membrane voltage
-M = b2.StateMonitor(neuron, variables=True, record=True)
-S = b2.SpikeMonitor(neuron)
+# ----------------------------
+# 6. Set up recording
+# ----------------------------
 
-b2.run(_duration)
+# Record all state variables for all neurons
+state_monitor = b2.StateMonitor(neuron, variables=True, record=True)
 
-spike_trains = S.spike_trains()
-n_spikes = [len(spike_trains[k]) for k in spike_trains]
+# Record spike times
+spike_monitor = b2.SpikeMonitor(neuron)
+
+# ----------------------------
+# 7. Run the simulation
+# ----------------------------
+
+b2.run(duration)
+
+# ----------------------------
+# 8. Analyze and visualize results
+# ----------------------------
+
+# Plot voltage trace of neuron 0
+plt.figure()
+plt.plot(state_monitor.t / b2.ms, state_monitor.v[0] / b2.mV)
+plt.xlabel("Time (ms)")
+plt.ylabel("Membrane potential (mV)")
+plt.title("Neuron 0 Voltage Trace")
+
+# Plot voltage trace of neuron 1
+plt.figure()
+plt.plot(state_monitor.t / b2.ms, state_monitor.v[1] / b2.mV)
+plt.xlabel("Time (ms)")
+plt.ylabel("Membrane potential (mV)")
+plt.title("Neuron 1 Voltage Trace")
+
+# Raster plot of all spikes
+plt.figure()
+plt.scatter(spike_monitor.t / b2.ms, spike_monitor.i, marker='|')
+plt.xlabel("Time (ms)")
+plt.ylabel("Neuron index")
+plt.title("Spike Raster Plot")
+
+# Firing rate vs input current
+spike_trains = spike_monitor.spike_trains()
+n_spikes = np.array([len(spike_trains[i]) for i in range(n_neurons)])
+firing_rates = n_spikes / ((stim_stop - stim_start) / b2.second)
 
 plt.figure()
-plt.plot(M.t, M.v[0])
+plt.plot(stim_amp / b2.pA, firing_rates, marker='o')
+plt.xlabel("Input current (pA)")
+plt.ylabel("Firing rate (Hz)")
+plt.title("Firing Rate vs Input Current")
 
-plt.figure()
-plt.scatter(S.t, S.i, marker='|')
 
-plt.figure()
-plt.plot(stim_amp, n_spikes / (stim_stop - stim_start), marker='o')
-    
 
