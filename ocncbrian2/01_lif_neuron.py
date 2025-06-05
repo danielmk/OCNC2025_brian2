@@ -127,6 +127,3 @@ plt.plot(stim_amp / b2.pA, firing_rates, marker='o')
 plt.xlabel("Input current (pA)")
 plt.ylabel("Firing rate (Hz)")
 plt.title("Firing Rate vs Input Current")
-
-
-
